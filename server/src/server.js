@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 8000;
 const app = require('./app')
 const {loadPlanetsData} = require('./models/planets.model')
 
-const MONGO_URL = 'mongodb+srv://sidkalyani9:Sbk91902002@cluster0.ldt7x7f.mongodb.net/?retryWrites=true&w=majority'
+const MONGO_URL = 
 
 const server = http.createServer(app);
 
