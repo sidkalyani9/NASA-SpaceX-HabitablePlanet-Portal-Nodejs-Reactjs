@@ -1,10 +1,12 @@
-const {launches,addNewLaunch, existsLaunch, abortedLaunch} = require('../../models/launches.model')
+const {getAllLaunches,scheduleNewLaunch, existsLaunch, abortedLaunch} = require('../../models/launches.model')
 
-function getAllLaunches(req,res) {
-    return res.status(200).json(Array.from(launches.values()))
+async function HttpGetAllLaunches(req,res) {
+    
+    return await res.status(200).json(await getAllLaunches())
+    
 }
 
-function httpAddNewLaunch(req,res) {
+async function httpAddNewLaunch(req,res) {
     const launch = req.body;
 
     // VALIDATION
@@ -24,7 +26,7 @@ function httpAddNewLaunch(req,res) {
         })
     }
 
-    addNewLaunch(launch)
+    await scheduleNewLaunch(launch)
 
     return res.status(201).json(launch) 
 }
@@ -44,7 +46,7 @@ function httpAbortLaunch(req,res) {
 }
 
 module.exports = {
-    getAllLaunches,
+    HttpGetAllLaunches,
     httpAddNewLaunch,
     httpAbortLaunch
 };

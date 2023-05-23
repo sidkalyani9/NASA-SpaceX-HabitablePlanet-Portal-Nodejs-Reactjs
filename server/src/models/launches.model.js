@@ -1,5 +1,7 @@
-const launches = new Map();
+// const launches = new Map();
 let latestFlightNumber = 1;
+
+const launches = require('./launches.mongo')
 
 const launch = {
     flightNumber:1,
@@ -12,15 +14,16 @@ const launch = {
     success: true
 }
 
-launches.set(launch.flightNumber, launch)
+saveLaunch(launch)
+// launches.set(launch.flightNumber, launch)
 
 // function httpGetAllLaunches(){
 //     return Array.from(launces.values());
 // }
 
-function existsLaunch(launchId){
-    return launches.has(launchId);
-}
+// function existsLaunch(launchId){
+//     return launches.has(launchId);
+// }
 
 function addNewLaunch(launch){
     latestFlightNumber++;
@@ -33,6 +36,32 @@ function addNewLaunch(launch){
     }))
 }
 
+async function scheduleNewLaunch(launch){
+    const latestFlightNumber = await getLatestFlightNumber() + 1;
+    const newLaunch = Object.assign(launch,{
+        success: true,
+        upcoming: true,
+        customers: ['Siddharth','Space X', 'NASA'],
+        flightNumber: latestFlightNumber
+    })
+
+    await saveLaunch(newLaunch)
+}
+
+async function getAllLaunches(){
+    return await launches.find({});
+}
+
+async function getLatestFlightNumber() {
+    const latestLaunch = await launches.findOne({}).sort('-flightNumber')
+
+    // IF NO LAUNCHES HAVE BEEN DONE
+    if(!latestLaunch){
+        return 1;
+    }
+    return latestLaunch.flightNumber
+}
+
 function abortedLaunch(launchId){
     const aborted = launches.get(launchId);
     aborted.success = false;
@@ -41,9 +70,19 @@ function abortedLaunch(launchId){
     return aborted;
 }
 
+async function saveLaunch(launch) {
+    await launches.updateOne({
+        flightNumber: launch.flightNumber,
+    }, 
+    launch, 
+    {
+        upsert: true
+    })
+}
+
 module.exports = {
-    launches,
-    addNewLaunch,
-    existsLaunch,
+    getAllLaunches,
+    scheduleNewLaunch,
+    // existsLaunch,
     abortedLaunch
 };
