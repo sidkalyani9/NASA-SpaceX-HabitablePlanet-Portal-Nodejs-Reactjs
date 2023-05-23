@@ -62,12 +62,14 @@ async function getLatestFlightNumber() {
     return latestLaunch.flightNumber
 }
 
-function abortedLaunch(launchId){
-    const aborted = launches.get(launchId);
-    aborted.success = false;
-    aborted.upcoming = false;
-    
-    return aborted;
+async function abortedLaunch(launchId){
+    return await launches.updateOne({
+        flightNumber: launchId
+    },
+    {
+        upcoming: false,
+        success: false
+    }) 
 }
 
 async function saveLaunch(launch) {

@@ -6,6 +6,6 @@ const {HttpGetAllLaunches,httpAddNewLaunch,httpAbortLaunch} = require('./launche
 
 launchesRouter.get('/launch', HttpGetAllLaunches)
 launchesRouter.post('/launch', httpAddNewLaunch)
-// launchesRouter.delete('/launch/:id', httpAbortLaunch)
+launchesRouter.delete('/launch/:id', httpAbortLaunch)
 
 module.exports = launchesRouter;

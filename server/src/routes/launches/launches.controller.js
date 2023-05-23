@@ -31,17 +31,17 @@ async function httpAddNewLaunch(req,res) {
     return res.status(201).json(launch) 
 }
 
-function httpAbortLaunch(req,res) {
+async function httpAbortLaunch(req,res) {
     const launchId = Number(req.params.id);
 
-    if(!existsLaunch(launchId)){
-        res.status(404).json({
-            error: "Aborted Entity does not exist"
-        })
-    }
+    // if(!existsLaunch(launchId)){
+    //     res.status(404).json({
+    //         error: "Aborted Entity does not exist"
+    //     })
+    // }
 
-    const launch = abortedLaunch(launchId);
-    return res.status(200).json(launch); 
+    const launch = await abortedLaunch(launchId);
+    return await res.status(200).json(launch); 
 
 }
 
