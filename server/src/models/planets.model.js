@@ -3,6 +3,7 @@ const { parse } = require('csv-parse');     //OUR CSV FILE PARSER
 const fs = require('fs');                   //OUR FILE PACKAGE TO READ THE FILE
 
 const habitablePlanet = [];                          //OUR REULTS WILL BE STORED HERE
+const planets = require('./planets.mongo')
 
 function checkHabitability(planetData){
     return  planetData['koi_disposition'] === 'CONFIRMED' &&
@@ -17,9 +18,11 @@ function loadPlanetsData() {
                 comment: '#',
                 columns: true,
             }))
-            .on('data', (data) => {
-                if(checkHabitability(data)){
-                    habitablePlanet.push(data)
+            .on('data', async(data) => {
+                if(checkHabitability(data)) {
+                    await planets.create({
+                        keplerName: data.kepler_name
+                    })
                 }
             })
             .on('error', (err) => {
